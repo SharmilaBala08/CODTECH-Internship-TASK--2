@@ -1,0 +1,80 @@
+/*Student Grade Tracker*/
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class GradeTracker {
+    private Map<String, Double> grades;
+    private String studentName;
+
+    public GradeTracker(String studentName) {
+        this.studentName = studentName;
+        this.grades = new HashMap<>();
+    }
+
+    public void addGrade(String subject, double grade) {
+        if (grade < 0 || grade > 100) {
+            System.out.println("Invalid grade. Please enter a grade between 0 and 100.");
+            return;
+        }
+        grades.put(subject, grade);
+    }
+    public double calculateAverageGrade() {
+        if (grades.isEmpty()) {
+            System.out.println("No grades added. Please add some grades first.");
+            return 0;
+        }
+        double sum = 0;
+        for (double grade : grades.values()) {
+            sum += grade;
+        }
+        return sum / grades.size();
+    }
+
+    public String getLetterGrade(double averageGrade) {
+        if (averageGrade >= 90) {
+            return "A";
+        } else if (averageGrade >= 80) {
+            return "B";
+        } else if (averageGrade >= 70) {
+            return "C";
+        } else if (averageGrade >= 60) {
+            return "D";
+        } else {
+            return "F";
+        }
+    }
+
+    public void displayGrades() {
+        System.out.println("Student: " + studentName);
+        System.out.println("Grades:");
+        for (Map.Entry<String, Double> entry : grades.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+        double averageGrade = calculateAverageGrade();
+        System.out.println("Average Grade: " + averageGrade);
+        System.out.println("Letter Grade: " + getLetterGrade(averageGrade));
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter student name: ");
+        String studentName = scanner.nextLine();
+
+        GradeTracker gradeTracker = new GradeTracker(studentName);
+
+        while (true) {
+            System.out.print("Enter subject and grade (or 'quit' to finish): ");
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("quit")) {
+                break;
+            }
+            String[] parts = input.split(" ");
+            String subject = parts[0];
+            double grade = Double.parseDouble(parts[1]);
+            gradeTracker.addGrade(subject, grade);
+        }
+
+        gradeTracker.displayGrades();
+    }
+}
